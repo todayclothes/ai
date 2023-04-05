@@ -1,10 +1,9 @@
+from model.clothes_model import Model
 from flask import Flask
+from main import model
 
 app = Flask(__name__)
+app.register_blueprint(model.blue_model, url_prefix='/models')
 
-@app.route('/')
-def test():
-    return 'test success'
-
-if __name__ == '__main__':
+if __name__=="__main__":
     app.run(host='0.0.0.0', port='5000', debug=True)
