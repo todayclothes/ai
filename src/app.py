@@ -1,4 +1,4 @@
-from model.clothes_model import Model
+from model.fashion import Model
 from flask import Flask
 from main import model
 
