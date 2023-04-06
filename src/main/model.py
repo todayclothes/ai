@@ -7,9 +7,9 @@ from sklearn.preprocessing import LabelEncoder
 
 blue_model = Blueprint('model', __name__)
 
-# 계절, 성별, 습도, 풍속, 강수, 기온, 스케줄
+# parameter : 계절, 성별, 습도, 풍속, 강수, 기온, 스케줄
 @blue_model.route('/clothes', methods=['GET'])
-def clothes_model():
+def get_clothes_recommend():
     try:
         season = float(request.args.get('season'))
         gender = float(request.args.get('gender'))
@@ -39,21 +39,12 @@ def clothes_model():
     sample = torch.FloatTensor(sample.astype(float).reshape(1,-1))
     
     clothes = le_fashion.inverse_transform(torch.argmax(clf(sample)).cpu().numpy().ravel())
-    # clothes = clothes[0]
     
     return jsonify(clothes=clothes[0])
-    
-    # return str(clothes)
-    # data = {'clothes' : clothes}
-    # return jsonify(data)
-
-@blue_model.route('/region')
-def region_model():
-    return "success_region_model";
-
+ 
 @blue_model.route('/schedule')
-def schedule_model():
-    return "success_schedule_model";
+def region_model():
+    return "success";
 
 def get_current_path():
     return os.path.dirname(os.path.abspath(__file__))
