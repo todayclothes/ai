@@ -3,3 +3,4 @@ torch==1.13.0
 numpy==1.21.6
 joblib==1.2.0
 scikit-learn==1.0.2
+kiwipiepy==0.14.1
