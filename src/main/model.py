@@ -28,25 +28,49 @@ def get_clothes_recommend():
         return "Error: Invalid value for 'season' parameter. Must be a float."
     
     model_path = os.path.join(get_current_path(), '..', 'model')
-    clothes_model_path = os.path.join(model_path, 'clothes', 'clothes.pkl')
-    le_fashion_path = os.path.join(model_path, 'clothes', 'le_fashion_1.pkl')
-    le_schedule_path = os.path.join(model_path, 'clothes', 'le_schedule_1.pkl')
+    # top model path
+    clothes_top_model_path = os.path.join(model_path, 'clothes', 'clothes_top_1.pkl')
+    le_clothes_top_path = os.path.join(model_path, 'clothes', 'le_clothes_top_1.pkl')
+    le_schedule_top_path = os.path.join(model_path, 'clothes', 'le_schedule_top_1.pkl')
     
-    le_fashion = LabelEncoder()
-    le_schedule = LabelEncoder()
+    # bottom model path
+    clothes_bottom_model_path = os.path.join(model_path, 'clothes', 'clothes_bottom_1.pkl')
+    le_clothes_bottom_path = os.path.join(model_path, 'clothes', 'le_clothes_bottom_1.pkl')
+    le_schedule_bottom_path = os.path.join(model_path, 'clothes', 'le_schedule_bottom_1.pkl')
+    
+    # top le
+    le_clothes_top = LabelEncoder()
+    le_schedule_top = LabelEncoder()
+    
+    # bottom le
+    le_clothes_bottom = LabelEncoder()
+    le_schedule_bottom = LabelEncoder()
 
-    le_fashion = joblib.load(le_fashion_path)
-    le_schedule = joblib.load(le_schedule_path)
+    # top le load
+    le_clothes_top = joblib.load(le_clothes_top_path)
+    le_schedule_top = joblib.load(le_schedule_top_path)
     
-    clf = joblib.load(clothes_model_path)
+    # bottom le load
+    le_clothes_bottom = joblib.load(le_clothes_bottom_path)
+    le_schedule_bottom = joblib.load(le_schedule_bottom_path)
+    
+    # top classification
+    clf = joblib.load(clothes_top_model_path)
     sample = np.array([season, gender, humidity, wind_speed, rain, temp, schedule]).reshape(-1,1)    
-    sample[6] = le_schedule.transform(sample[6])
-    print(sample)
+    sample[6] = le_schedule_top.transform(sample[6])
     sample = torch.FloatTensor(sample.astype(float).reshape(1,-1))
+    clothes_top = le_clothes_top.inverse_transform(torch.argmax(clf(sample)).cpu().numpy().ravel())
     
-    clothes = le_fashion.inverse_transform(torch.argmax(clf(sample)).cpu().numpy().ravel())
+    # bottom classification
+    clf = joblib.load(clothes_bottom_model_path)
+    sample = np.array([season, gender, humidity, wind_speed, rain, temp, schedule]).reshape(-1,1)    
+    sample[6] = le_schedule_bottom.transform(sample[6])
+    sample = torch.FloatTensor(sample.astype(float).reshape(1,-1))
+    clothes_bottom = le_clothes_bottom.inverse_transform(torch.argmax(clf(sample)).cpu().numpy().ravel())
     
-    return jsonify(clothes=clothes[0])
+    return jsonify({
+        "top" : int(clothes_top[0]),
+        "bottom" : int(clothes_bottom[0])})
  
 @blue_model.route('/schedule', methods=['GET'])
 def region_model():

@@ -6,7 +6,7 @@ class Model(nn.Module):
         self.l1 = nn.Linear(7, 512, bias = True)
         self.l2 = nn.Linear(512, 256, bias = True)
         self.l3 = nn.Linear(256, 64, bias = True)
-        self.l4 = nn.Linear(64, 18, bias = True)
+        self.l4 = nn.Linear(64, 80, bias = True)
         
         self.relu = nn.ReLU()
         
