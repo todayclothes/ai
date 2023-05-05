@@ -3,10 +3,10 @@ class Model(nn.Module):
     def __init__(self):
         super().__init__()
         
-        self.l1 = nn.Linear(7, 512, bias = True)
-        self.l2 = nn.Linear(512, 256, bias = True)
-        self.l3 = nn.Linear(256, 64, bias = True)
-        self.l4 = nn.Linear(64, 80, bias = True)
+        self.l1 = nn.Linear(6, 1024, bias = True)
+        self.l2 = nn.Linear(1024, 512, bias = True)
+        self.l3 = nn.Linear(512, 128, bias = True)
+        self.l4 = nn.Linear(128, 80, bias = True)
         
         self.relu = nn.ReLU()
         

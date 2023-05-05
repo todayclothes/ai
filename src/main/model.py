@@ -9,32 +9,30 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from model.schedule.schedule import Tokenizer
 from model.region.region import Tokenizer
-from sklearn.ensemble import RandomForestClassifier
 
 blue_model = Blueprint('model', __name__)
 
-# parameter : 계절, 성별, 습도, 풍속, 강수, 기온, 스케줄
+# parameter : 성별, 습도, 풍속, 강수, 기온, 스케줄
 @blue_model.route('/clothes', methods=['GET'])
 def get_clothes_recommend():
-    season, gender, humidity, wind_speed, rain, temp = map(float, (request.args.get('season'),
-                                                                            request.args.get('gender'),
-                                                                            request.args.get('humidity'),
-                                                                            request.args.get('wind_speed'),
-                                                                            request.args.get('rain'),
-                                                                            request.args.get('temp')))
+    gender, humidity, wind_speed, rain, temp = map(float, [request.args.get('gender'),
+                                                       request.args.get('humidity'),
+                                                       request.args.get('wind_speed'),
+                                                       request.args.get('rain'),
+                                                       request.args.get('temp')])
     schedule = request.args.get('schedule')
     
     try:
         # path
         model_path = os.path.join(get_current_path(), '..', 'model', 'clothes')
         ## schedule le path
-        le_schedule_path = os.path.join(model_path, 'le_schedule_top_1.pkl')
+        le_schedule_path = os.path.join(model_path, 'le_schedule_2.pkl')
         ## top model path
-        clothes_top_model_path = os.path.join(model_path, 'clothes_top_1.pkl')
-        le_clothes_top_path = os.path.join(model_path, 'le_clothes_top_1.pkl')
+        clothes_top_model_path = os.path.join(model_path, 'clothes_top_2.pkl')
+        le_clothes_top_path = os.path.join(model_path, 'le_clothes_top_2.pkl')
         ## bottom model path
-        clothes_bottom_model_path = os.path.join(model_path, 'clothes_bottom_1.pkl')
-        le_clothes_bottom_path = os.path.join(model_path, 'le_clothes_bottom_1.pkl')
+        clothes_bottom_model_path = os.path.join(model_path, 'clothes_bottom_2.pkl')
+        le_clothes_bottom_path = os.path.join(model_path, 'le_clothes_bottom_2.pkl')
         
         # label encoder 선언 및 로드
         le_clothes_top, le_clothes_bottom, le_schedule = [LabelEncoder() for _ in range(3)]
@@ -42,8 +40,8 @@ def get_clothes_recommend():
         le_schedule = joblib.load(le_schedule_path) 
         
         # 데이터 전처리
-        sample = np.array([season, gender, humidity, wind_speed, rain, temp, schedule]).reshape(-1,1)
-        sample[6] = le_schedule.transform(sample[6])
+        sample = np.array([gender, humidity, wind_speed, rain, temp, schedule]).reshape(-1,1)
+        sample[5] = le_schedule.transform(sample[5])
         sample = torch.FloatTensor(sample.astype(float).reshape(1,-1))
         
         # clothes 예측
@@ -55,7 +53,7 @@ def get_clothes_recommend():
         clothes_bottom = le_clothes_bottom.inverse_transform(torch.argmax(clf(sample)).cpu().numpy().ravel())
         
     except ValueError:
-        return "Error: Invalid value for 'season' parameter. Must be a float."
+        return "Error: Invalid value for parameter. Must be a float."
     
     return jsonify({
         "top": int(clothes_top[0]),
@@ -73,16 +71,16 @@ def region_model():
     vectorizer = TfidfVectorizer()
     
     model_path = os.path.join(get_current_path(), '..', 'model')
-    vector_kiwi_3_path = os.path.join(model_path, 'schedule', 'vector_kiwi_3.pkl')
-    clf_kiwi_3_path = os.path.join(model_path, 'schedule', 'clf_kiwi_3.pkl')
+    schedule_vector_4_path = os.path.join(model_path, 'schedule', 'schedule_vector_4.pkl')
+    schedule_clf_4_path = os.path.join(model_path, 'schedule', 'schedule_clf_4.pkl')
     region_vector_20_path = os.path.join(model_path, 'region', 'region_vector_20.pkl')
     region_clf_20_path = os.path.join(model_path, 'region', 'region_clf_20.pkl')
         
-    vectorizer = joblib.load(vector_kiwi_3_path)
+    vectorizer = joblib.load(schedule_vector_4_path)
     sample = vectorizer.transform(sample)
     
-    clf = RandomForestClassifier()
-    clf = joblib.load(clf_kiwi_3_path)
+    clf = SVC()
+    clf = joblib.load(schedule_clf_4_path)
     
     plan = clf.predict(sample)
     
