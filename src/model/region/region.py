@@ -1,18 +1,12 @@
-from soynlp.tokenizer import LTokenizer
-import joblib
-import os
-
-tokenizer = LTokenizer()
-current_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(current_dir, 'region_tokenizer_24.pkl')
-tokenizer = joblib.load(file_path)
+from mecab import MeCab
+mecab = MeCab()
 
 class region_Tokenizer():
         
     def __call__(self, data):
         list = []
         
-        p = tokenizer.tokenize(data)
+        p = mecab.nouns(data)
         
         for i in range(len(p)):
             if p[i].endswith('특별시') == True or p[i].endswith('광역시') == True:

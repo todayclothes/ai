@@ -1,20 +1,15 @@
-from soynlp.tokenizer import LTokenizer
-import joblib
-import os
-
-tokenizer = LTokenizer()
-current_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(current_dir, 'schedule_tokenizer_5.pkl')
-tokenizer = joblib.load(file_path)
+from mecab import MeCab
+mecab = MeCab()
 
 class schedule_Tokenizer():
         
     def __call__(self, data):
         list = []
         
-        p = tokenizer.tokenize(data)
+        p = mecab.pos(data)
         
         for i in range(len(p)):
-                list.append(p[i])
+            if p[i][1].startswith('J') == False:
+                list.append(p[i][0])
                 
         return ( " ".join( list ))

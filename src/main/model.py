@@ -68,27 +68,27 @@ def region_model():
     vectorizer = TfidfVectorizer()
     
     model_path = os.path.join(get_current_path(), '..', 'model')
-    schedule_vector_5_path = os.path.join(model_path, 'schedule', 'schedule_vector_5.pkl') #파일 수정 요망
-    schedule_clf_5_path = os.path.join(model_path, 'schedule', 'schedule_clf_5.pkl') #파일 수정 요망
-    region_vector_24_path = os.path.join(model_path, 'region', 'region_vector_24.pkl') #파일 수정 요망
-    region_clf_24_path = os.path.join(model_path, 'region', 'region_clf_24.pkl') #파일 수정 요망
+    schedule_vector_path = os.path.join(model_path, 'schedule', 'schedule_vector_8.pkl')
+    schedule_clf_path = os.path.join(model_path, 'schedule', 'schedule_clf_8.pkl')
+    region_vector_path = os.path.join(model_path, 'region', 'region_vector_27.pkl')
+    region_clf_path = os.path.join(model_path, 'region', 'region_clf_27.pkl')
         
-    vectorizer = joblib.load(schedule_vector_5_path)
+    vectorizer = joblib.load(schedule_vector_path)
     sample = vectorizer.transform(sample)
     
     clf = SVC()
-    clf = joblib.load(schedule_clf_5_path)
+    clf = joblib.load(schedule_clf_path)
     
     plan = clf.predict(sample)
     
     Token = region_Tokenizer()
     sample2 = [Token(title)]
     
-    vectorizer = joblib.load(region_vector_24_path)
+    vectorizer = joblib.load(region_vector_path)
     sample2 = vectorizer.transform(sample2)
     
     clf = SVC()
-    clf = joblib.load(region_clf_24_path)
+    clf = joblib.load(region_clf_path)
     
     region = clf.predict(sample2)
     
