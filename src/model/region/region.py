@@ -7,7 +7,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, 'region_tokenizer_24.pkl')
 tokenizer = joblib.load(file_path)
 
-class Tokenizer():
+class region_Tokenizer():
         
     def __call__(self, data):
         list = []

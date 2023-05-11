@@ -7,7 +7,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, 'schedule_tokenizer_5.pkl')
 tokenizer = joblib.load(file_path)
 
-class Tokenizer():
+class schedule_Tokenizer():
         
     def __call__(self, data):
         list = []

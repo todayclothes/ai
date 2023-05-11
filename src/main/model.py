@@ -6,8 +6,8 @@ import os
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
-from model.schedule.schedule import Tokenizer
-from model.region.region import Tokenizer
+from model.schedule.schedule import schedule_Tokenizer
+from model.region.region import region_Tokenizer
 
 blue_model = Blueprint('model', __name__)
 
@@ -25,13 +25,13 @@ def get_clothes_recommend():
         # path
         model_path = os.path.join(get_current_path(), '..', 'model', 'clothes')
         ## schedule le path
-        le_schedule_path = os.path.join(model_path, 'le_schedule_2.pkl')
+        le_schedule_path = os.path.join(model_path, 'le_schedule_3.pkl')
         ## top model path
-        clothes_top_model_path = os.path.join(model_path, 'clothes_top_2.pkl')
-        le_clothes_top_path = os.path.join(model_path, 'le_clothes_top_2.pkl')
+        clothes_top_model_path = os.path.join(model_path, 'clothes_top_3.pkl')
+        le_clothes_top_path = os.path.join(model_path, 'le_clothes_top_3.pkl')
         ## bottom model path
-        clothes_bottom_model_path = os.path.join(model_path, 'clothes_bottom_2.pkl')
-        le_clothes_bottom_path = os.path.join(model_path, 'le_clothes_bottom_2.pkl')
+        clothes_bottom_model_path = os.path.join(model_path, 'clothes_bottom_3.pkl')
+        le_clothes_bottom_path = os.path.join(model_path, 'le_clothes_bottom_3.pkl')
         
         # label encoder 선언 및 로드
         le_clothes_top, le_clothes_bottom, le_schedule = [LabelEncoder() for _ in range(3)]
@@ -61,9 +61,8 @@ def get_clothes_recommend():
 @blue_model.route('/schedule', methods=['GET'])
 def region_model():
     title = request.args.get('title')
-    region = request.args.get('region')
     
-    Token = Tokenizer()
+    Token = schedule_Tokenizer()
     sample = [Token(title)]
     
     vectorizer = TfidfVectorizer()
@@ -82,7 +81,8 @@ def region_model():
     
     plan = clf.predict(sample)
     
-    sample2 = [Token(region)]
+    Token = region_Tokenizer()
+    sample2 = [Token(title)]
     
     vectorizer = joblib.load(region_vector_24_path)
     sample2 = vectorizer.transform(sample2)
