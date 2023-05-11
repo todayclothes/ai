@@ -61,6 +61,7 @@ def get_clothes_recommend():
 @blue_model.route('/schedule', methods=['GET'])
 def region_model():
     title = request.args.get('title')
+    region = request.args.get('region')
     
     Token = schedule_Tokenizer()
     sample = [Token(title)]
@@ -82,7 +83,7 @@ def region_model():
     plan = clf.predict(sample)
     
     Token = region_Tokenizer()
-    sample2 = [Token(title)]
+    sample2 = [Token(region)]
     
     vectorizer = joblib.load(region_vector_path)
     sample2 = vectorizer.transform(sample2)
