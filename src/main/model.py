@@ -69,10 +69,10 @@ def region_model():
     vectorizer = TfidfVectorizer()
     
     model_path = os.path.join(get_current_path(), '..', 'model')
-    schedule_vector_path = os.path.join(model_path, 'schedule', 'schedule_vector_8.pkl')
-    schedule_clf_path = os.path.join(model_path, 'schedule', 'schedule_clf_8.pkl')
-    region_vector_path = os.path.join(model_path, 'region', 'region_vector_27.pkl')
-    region_clf_path = os.path.join(model_path, 'region', 'region_clf_27.pkl')
+    schedule_vector_path = os.path.join(model_path, 'schedule', 'schedule_vector_9.pkl')
+    schedule_clf_path = os.path.join(model_path, 'schedule', 'schedule_clf_9.pkl')
+    region_vector_path = os.path.join(model_path, 'region', 'region_vector_28.pkl')
+    region_clf_path = os.path.join(model_path, 'region', 'region_clf_28.pkl')
         
     vectorizer = joblib.load(schedule_vector_path)
     sample = vectorizer.transform(sample)
