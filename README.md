@@ -45,6 +45,14 @@ AI of clothing recommendation service tailored to temperature and personal sched
   </tr>
 </table>
 
+## ✅ requirements
+- Flask==2.2.3
+- torch==1.13.0+cpu
+- numpy==1.21.6
+- joblib==1.2.0
+- scikit-learn==1.0.2
+- mecab==1.3.3
+
 ## 💡 서비스 구축
 ### 데이터 수집
 ![image](https://github.com/todayclothes/ai/assets/87798704/40e63f20-cf37-4554-8e98-a2ac95be2bfd)
